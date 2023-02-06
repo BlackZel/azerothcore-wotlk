@@ -17,6 +17,7 @@
 
 #include "Guild.h"
 #include "GuildMgr.h"
+#include "Chat.h"
 #include "GuildPackets.h"
 #include "Log.h"
 #include "ObjectMgr.h"
@@ -284,6 +285,14 @@ void WorldSession::HandleGuildBankerActivate(WorldPackets::Guild::GuildBankActiv
     if (!guild)
     {
         Guild::SendCommandResult(this, GUILD_COMMAND_VIEW_TAB, ERR_GUILD_PLAYER_NOT_IN_GUILD);
+        return;
+    }
+
+    // Запрет Банка
+    ChatHandler handler = ChatHandler(this);
+    if (_player->getLevel() < 30)
+    {
+        handler.SendSysMessage("[Хранилище Гильдии] доступно с 30-го уровня.");
         return;
     }
 

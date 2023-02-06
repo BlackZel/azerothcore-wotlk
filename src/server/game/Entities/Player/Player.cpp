@@ -5714,6 +5714,10 @@ void Player::CheckAreaExploreAndOutdoor()
                     XP = uint32(sObjectMgr->GetBaseXP(areaEntry->area_level) * sWorld->getRate(RATE_XP_EXPLORE));
                 }
 
+                // VIP
+                if (GetSession()->IsPremium())
+                    XP *= sWorld->getRate(RATE_XP_EXPLORE_PREMIUM);
+
                 GiveXP(XP, nullptr);
                 SendExplorationExperience(areaId, XP);
             }
@@ -6074,6 +6078,12 @@ bool Player::RewardHonor(Unit* uVictim, uint32 groupsize, int32 honor, bool awar
         AddPct(honor_f, GetMaxPositiveAuraModifier(SPELL_AURA_MOD_HONOR_GAIN_PCT));
     }
 
+    // VIP
+    if (GetSession()->IsPremium())
+    {
+        honor_f *= sWorld->getRate(RATE_HONOR_PREMIUM);
+    }
+    else
     honor_f *= sWorld->getRate(RATE_HONOR);
     // Back to int now
     honor = int32(honor_f);
@@ -6127,6 +6137,10 @@ bool Player::RewardHonor(Unit* uVictim, uint32 groupsize, int32 honor, bool awar
                 ChatHandler(GetSession()).PSendSysMessage("You have been awarded a token for slaying another player.");
         }
     }
+
+    // VIP
+    if (GetSession()->IsPremium())
+        honor_f *= sWorld->getRate(RATE_HONOR_PREMIUM);
 
     return true;
 }
@@ -7843,8 +7857,9 @@ void Player::SendLoot(ObjectGuid guid, LootType loot_type)
 
             // It may need a better formula
             // Now it works like this: lvl10: ~6copper, lvl70: ~9silver
-            bones->loot.gold = uint32(urand(50, 150) * 0.016f * pow(float(pLevel) / 5.76f, 2.5f) * sWorld->getRate(RATE_DROP_MONEY));
+                bones->loot.gold = uint32(urand(50, 150) * 0.016f * pow(float(pLevel) / 5.76f, 2.5f) * sWorld->getRate(RATE_DROP_MONEY));
         }
+  
 
         if (bones->lootRecipient != this)
             permission = NONE_PERMISSION;
@@ -16117,11 +16132,19 @@ uint16 Player::GetMaxSkillValueForLevel() const
 
 float Player::GetQuestRate(bool isDFQuest)
 {
-    float result = isDFQuest ? sWorld->getRate(RATE_XP_QUEST_DF) : sWorld->getRate(RATE_XP_QUEST);
+    float result = sWorld->getRate(RATE_XP_QUEST);
+    float resultvip = sWorld->getRate(RATE_XP_QUEST_PREMIUM);
+
+    // VIP QUEST
+    if (GetSession()->IsPremium())
+    {
+        sScriptMgr->OnGetQuestRate(this, resultvip);
+        return resultvip;
+    }
 
     sScriptMgr->OnGetQuestRate(this, result);
-
     return result;
+
 }
 
 void Player::SetServerSideVisibility(ServerSideVisibilityType type, AccountTypes sec)

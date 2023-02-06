@@ -21,6 +21,7 @@
 #include "BattlegroundMgr.h"
 #include "CharacterPackets.h"
 #include "Chat.h"
+#include "Item.h"
 #include "Common.h"
 #include "CreatureAI.h"
 #include "DBCEnums.h"
@@ -104,9 +105,9 @@ void WorldSession::HandleGossipSelectOptionOpcode(WorldPacket& recv_data)
         return;
     }
 
+    Item* item = nullptr;
     Creature* unit = nullptr;
     GameObject* go = nullptr;
-    Item* item = nullptr;
     if (guid.IsCreatureOrVehicle())
     {
         unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_NONE);
@@ -423,7 +424,7 @@ void WorldSession::HandleLogoutRequestOpcode(WorldPackets::Character::LogoutRequ
         DoLootRelease(lguid);
 
     bool instantLogout = ((GetSecurity() >= 0 && uint32(GetSecurity()) >= sWorld->getIntConfig(CONFIG_INSTANT_LOGOUT))
-                          || (GetPlayer()->HasPlayerFlag(PLAYER_FLAGS_RESTING) && !GetPlayer()->IsInCombat())) || GetPlayer()->IsInFlight();
+        || GetPlayer()->GetSession()->IsPremium() || GetPlayer()->HasPlayerFlag(PLAYER_FLAGS_RESTING)) && !GetPlayer()->IsInCombat() || GetPlayer()->IsInFlight();
 
     bool preventAfkSanctuaryLogout = sWorld->getIntConfig(CONFIG_AFK_PREVENT_LOGOUT) == 1
                                      && GetPlayer()->isAFK() && sAreaTableStore.LookupEntry(GetPlayer()->GetAreaId())->IsSanctuary();

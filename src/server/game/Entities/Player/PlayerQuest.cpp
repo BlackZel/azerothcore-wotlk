@@ -734,6 +734,7 @@ void Player::RewardQuest(Quest const* quest, uint32 reward, Object* questGiver, 
 
     bool rewarded = IsQuestRewarded(quest_id) && !quest->IsDFQuest();
 
+
     // Not give XP in case already completed once repeatable quest
     uint32 XP = rewarded ? 0 : uint32(quest->XPValue(GetLevel()) * GetQuestRate(quest->IsDFQuest()));
 

@@ -85,37 +85,36 @@ uint32 Acore::XP::Gain(Player* player, Unit* unit, bool isBattleGround /*= false
             if (creature->isElite())
             {
                 // Elites in instances have a 2.75x XP bonus instead of the regular 2x world bonus.
-                if (unit->GetMap() && unit->GetMap()->IsDungeon())
-                    xpMod *= 2.75f;
+                if (unit->GetMap()->IsDungeon())
+                    xpMod *= 2.50f;
                 else
                     xpMod *= 2.0f;
             }
-
-            xpMod *= creature->GetCreatureTemplate()->ModExperience;
+           // xpMod *= creature->GetCreatureTemplate()->ModExperience;
         }
 
         if (isBattleGround)
         {
             switch (player->GetMapId())
             {
-                case MAP_BG_ALTERAC_VALLEY:
-                    xpMod *= sWorld->getRate(RATE_XP_BG_KILL_AV);
-                    break;
-                case MAP_BG_WARSONG_GULCH:
-                    xpMod *= sWorld->getRate(RATE_XP_BG_KILL_WSG);
-                    break;
-                case MAP_BG_ARATHI_BASIN:
-                    xpMod *= sWorld->getRate(RATE_XP_BG_KILL_AB);
-                    break;
-                case MAP_BG_EYE_OF_THE_STORM:
-                    xpMod *= sWorld->getRate(RATE_XP_BG_KILL_EOTS);
-                    break;
-                case MAP_BG_STRAND_OF_THE_ANCIENTS:
-                    xpMod *= sWorld->getRate(RATE_XP_BG_KILL_SOTA);
-                    break;
-                case MAP_BG_ISLE_OF_CONQUEST:
-                    xpMod *= sWorld->getRate(RATE_XP_BG_KILL_IC);
-                    break;
+            case MAP_BG_ALTERAC_VALLEY:
+                xpMod *= sWorld->getRate(RATE_XP_BG_KILL_AV);
+                break;
+            case MAP_BG_WARSONG_GULCH:
+                xpMod *= sWorld->getRate(RATE_XP_BG_KILL_WSG);
+                break;
+            case MAP_BG_ARATHI_BASIN:
+                xpMod *= sWorld->getRate(RATE_XP_BG_KILL_AB);
+                break;
+            case MAP_BG_EYE_OF_THE_STORM:
+                xpMod *= sWorld->getRate(RATE_XP_BG_KILL_EOTS);
+                break;
+            case MAP_BG_STRAND_OF_THE_ANCIENTS:
+                xpMod *= sWorld->getRate(RATE_XP_BG_KILL_SOTA);
+                break;
+            case MAP_BG_ISLE_OF_CONQUEST:
+                xpMod *= sWorld->getRate(RATE_XP_BG_KILL_IC);
+                break;
             }
         }
         else
@@ -129,9 +128,14 @@ uint32 Acore::XP::Gain(Player* player, Unit* unit, bool isBattleGround /*= false
             xpMod *= 1.0f - 2.0f * creature->GetPlayerDamageReq() / creature->GetMaxHealth();
         }
 
+        if (player->GetSession()->IsPremium())
+        {
+            xpMod *= sWorld->getRate(RATE_XP_KILL_PREMIUM);
+        }
+
         gain = uint32(gain * xpMod);
     }
 
-    //sScriptMgr->OnGainCalculation(gain, player, u); // pussywizard: optimization
+  //  sScriptMgr->OnGainCalculation(gain, player, unit); // pussywizard: optimization
     return gain;
 }
