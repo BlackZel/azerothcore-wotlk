@@ -302,6 +302,7 @@ public:
                 player->learnSpell(2567);
                 player->learnSpell(197);
                 player->learnSpell(202);
+                player->learnSpell(264);
                 break;
 
             case CLASS_ROGUE:
