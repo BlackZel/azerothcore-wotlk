@@ -12,6 +12,15 @@ public:
             player->learnSpell(61357); // vip
 		}
 	}
+
+    void OnLevelChanged(Player* player, uint8 oldLevel) override
+    {
+        /* Выдача свитка для фамилек */
+        if (oldLevel == 29)
+        {
+            player->AddItem(34103, 1); 
+        }
+    }
 };
 
 	void AddSC_New_Character()
