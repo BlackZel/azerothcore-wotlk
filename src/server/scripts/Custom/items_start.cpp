@@ -20,6 +20,10 @@ public:
         {
             player->AddItem(34103, 1); 
         }
+        if (oldLevel == 69 && player->getClass() == CLASS_DEATH_KNIGHT)
+        {
+            player->AddItem(34103, 1);
+        }
     }
 };
 
