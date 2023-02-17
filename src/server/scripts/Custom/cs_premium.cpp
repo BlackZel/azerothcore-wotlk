@@ -19,7 +19,7 @@ public:
         {
             { "bank", HandlePremiumBankCommand, SEC_PLAYER, Console::No},
             { "mail", HandlePremiumMailCommand, SEC_PLAYER, Console::No},
-          //  { "home", HandlePremiumTeleCommand, SEC_PLAYER, Console::No},
+            { "buff", HandleVIPBuffCommand, SEC_PLAYER, Console::No},
         };
 
         static ChatCommandTable commandTable =
@@ -77,19 +77,28 @@ public:
         return false;
     }
 
-    static bool HandlePremiumTeleCommand(ChatHandler* handler, char const* /*args*/)
+    static bool HandleVIPBuffCommand(ChatHandler* handler, char const* /*args*/)
     {
         Player* player = handler->GetSession()->GetPlayer();
-        if (player->GetSession()->IsPremium() && sWorld->getBoolConfig(COMMAND_MAIL_PREMIUM))
+        if (handler->GetSession()->IsPremium())
         {
-            //Different Checks
-            if (player->IsInCombat() || player->IsInFlight() || player->GetMap()->IsBattlegroundOrArena() || player->HasStealthAura() || player->HasFlag(UNIT_FIELD_FLAGS_2, UNIT_FLAG2_FEIGN_DEATH) || player->isDead())
+            if (player->getLevel() >= 55)
             {
-                handler->SendSysMessage(EMOTE_ZONE_VIP);
-                handler->SetSentErrorMessage(true);
-                return false;
+                player->CastSpell(player, 48162, true);
+                player->CastSpell(player, 48074, true);
+                player->CastSpell(player, 48170, true);
+                player->CastSpell(player, 43223, true);
+                player->CastSpell(player, 43015, true);
+                player->CastSpell(player, 43017, true);
+                player->CastSpell(player, 69381, true);
+                player->CastSpell(player, 36880, true);
             }
-            player->TeleportTo(571, 6236.229980f, 5768.240234f, -5.373631f, 0.736042f);
+            else
+            {
+                player->CastSpell(player, 467, true);
+                player->CastSpell(player, 20217, true);
+                handler->SendSysMessage("Больше баффов откроется на 55-м уровне.");
+            }
         }
         else
             handler->SendSysMessage(EMOTE_NO_VIP);

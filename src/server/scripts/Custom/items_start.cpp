@@ -11,6 +11,19 @@ public:
             player->learnSpell(55068); // trans
             player->learnSpell(61357); // vip
 		}
+
+        // видача свитка vip
+        if (player->GetSession()->IsPremium())
+        {
+            if (!player->HasItemCount(34104, 1))
+            {
+                player->AddItem(34104, 1);
+            }
+        }
+        else
+        {
+            player->DestroyItemCount(34104, 1, true);
+        }
 	}
 
     void OnLevelChanged(Player* player, uint8 oldLevel) override
