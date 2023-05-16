@@ -98,3 +98,4 @@ local.properties
 #  !modules/yourmodule
 #
 # ==================
+data/sql/base/db_world/charactersx5.sql
