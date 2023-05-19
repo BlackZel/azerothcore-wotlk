@@ -47,7 +47,7 @@ public:
 			handler.PSendSysMessage("|cfffcc141Доступные команды:|r");
 			handler.PSendSysMessage("|cff8ab6fc[.vip bank]|cfffcc141 - открыть банк|r");
 			handler.PSendSysMessage("|cff8ab6fc[.vip mail]|cfffcc141 - открыть почту|r");
-            handler.PSendSysMessage("|cff8ab6fcРейты:|cfffcc141 Опыт х7, Задания х4, Репутация х3, Очки чести и арены х2|r");
+            handler.PSendSysMessage("|cff8ab6fcРейты:|cfffcc141 Опыт х12, Репутация х3, Очки чести и арены х2|r");
 			handler.PSendSysMessage("|cfffcc141Приятной игры.|r|TInterface/ICONS/Achievement_bg_tophealer_wsg:15|t");
 			QueryResult result = LoginDatabase.Query("SELECT unsetdate FROM account_premium WHERE id = {}", accid);
 			if (result)
