@@ -82,7 +82,7 @@ public:
         Player* player = handler->GetSession()->GetPlayer();
         if (handler->GetSession()->IsPremium())
         {
-            if (player->getLevel() >= 55)
+            if (player->getLevel() >= 30)
             {
                 player->CastSpell(player, 48162, true);
                 player->CastSpell(player, 48074, true);
@@ -97,7 +97,7 @@ public:
             {
                 player->CastSpell(player, 467, true);
                 player->CastSpell(player, 20217, true);
-                handler->SendSysMessage("Больше баффов откроется на 55-м уровне.");
+                handler->SendSysMessage("Больше баффов откроется на 30-м уровне.");
             }
         }
         else
