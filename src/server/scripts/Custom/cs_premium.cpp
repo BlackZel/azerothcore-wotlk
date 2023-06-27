@@ -2,6 +2,7 @@
 #include "Chat.h"
 #include "Player.h"
 #include "ScriptMgr.h"
+#include "GameTime.h"
 //#include "AuctionHouseMgr.h"
 
 #define EMOTE_NO_VIP "Доступно только VIP игрокам. Приобретается в ЛК."
@@ -20,6 +21,7 @@ public:
             { "bank", HandlePremiumBankCommand, SEC_PLAYER, Console::No},
             { "mail", HandlePremiumMailCommand, SEC_PLAYER, Console::No},
             { "buff", HandleVIPBuffCommand, SEC_PLAYER, Console::No},
+            { "inst", HandleInstanceVIPUnbindCommand, SEC_PLAYER, Console::No},
         };
 
         static ChatCommandTable commandTable =
@@ -103,6 +105,53 @@ public:
         else
             handler->SendSysMessage(EMOTE_NO_VIP);
             handler->SetSentErrorMessage(true);
+        return true;
+    }
+
+    static bool HandleInstanceVIPUnbindCommand(ChatHandler* handler, Variant<uint16, EXACT_SEQUENCE("all")> mapArg, Optional<uint8> difficultyArg)
+    {
+        Player* player = handler->getSelectedPlayer();
+        if (!player)
+            player = handler->GetSession()->GetPlayer();
+
+        uint16 counter = 0;
+        uint16 mapId = 0;
+
+        if (!player->GetSession()->IsPremium())
+            handler->SendSysMessage(EMOTE_NO_VIP);
+            handler->SetSentErrorMessage(true);
+            return true;
+
+        if (mapArg.holds_alternative<uint16>())
+        {
+            mapId = mapArg.get<uint16>();
+            if (!mapId)
+                return false;
+        }
+
+        for (uint8 i = 0; i < MAX_DIFFICULTY; ++i)
+        {
+            BoundInstancesMap const& m_boundInstances = sInstanceSaveMgr->PlayerGetBoundInstances(player->GetGUID(), Difficulty(i));
+            for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end();)
+            {
+                InstanceSave const* save = itr->second.save;
+                if (itr->first != player->GetMapId() && (!mapId || mapId == itr->first) && (!difficultyArg || difficultyArg == save->GetDifficulty()))
+                {
+                    uint32 resetTime = itr->second.extended ? save->GetExtendedResetTime() : save->GetResetTime();
+                    uint32 ttr = (resetTime >= GameTime::GetGameTime().count() ? resetTime - GameTime::GetGameTime().count() : 0);
+                    std::string timeleft = secsToTimeString(ttr);
+                    handler->PSendSysMessage("unbinding map: %d, inst: %d, perm: %s, diff: %d, canReset: %s, TTR: %s%s", itr->first, save->GetInstanceId(), itr->second.perm ? "yes" : "no", save->GetDifficulty(), save->CanReset() ? "yes" : "no", timeleft.c_str(), (itr->second.extended ? " (extended)" : ""));
+                    sInstanceSaveMgr->PlayerUnbindInstance(player->GetGUID(), itr->first, Difficulty(i), true, player);
+                    itr = m_boundInstances.begin();
+                    counter++;
+                }
+                else
+                    ++itr;
+            }
+        }
+
+        handler->PSendSysMessage("instances unbound: %d", counter);
+
         return true;
     }
 

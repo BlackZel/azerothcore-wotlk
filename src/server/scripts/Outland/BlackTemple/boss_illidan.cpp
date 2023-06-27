@@ -310,7 +310,7 @@ public:
         {
             events.ScheduleEvent(EVENT_SPELL_FLAME_CRASH, 15000);
             events.ScheduleEvent(EVENT_SPELL_DRAW_SOUL, 30000);
-            events.ScheduleEvent(EVENT_SPELL_PARASITIC_SHADOWFIEND, 20000);
+            events.ScheduleEvent(EVENT_SPELL_PARASITIC_SHADOWFIEND, 25000);
             events.ScheduleEvent(EVENT_SAY_TAUNT, 40000);
             if (phase >= 3)
             {
