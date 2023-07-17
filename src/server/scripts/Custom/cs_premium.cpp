@@ -21,7 +21,7 @@ public:
             { "bank", HandlePremiumBankCommand, SEC_PLAYER, Console::No},
             { "mail", HandlePremiumMailCommand, SEC_PLAYER, Console::No},
             { "buff", HandleVIPBuffCommand, SEC_PLAYER, Console::No},
-            { "inst", HandleInstanceVIPUnbindCommand, SEC_PLAYER, Console::No},
+         //   { "inst", HandleInstanceVIPUnbindCommand, SEC_PLAYER, Console::No},
         };
 
         static ChatCommandTable commandTable =
@@ -118,9 +118,11 @@ public:
         uint16 mapId = 0;
 
         if (!player->GetSession()->IsPremium())
+        {
             handler->SendSysMessage(EMOTE_NO_VIP);
             handler->SetSentErrorMessage(true);
-            return true;
+            return false;
+        }
 
         if (mapArg.holds_alternative<uint16>())
         {
