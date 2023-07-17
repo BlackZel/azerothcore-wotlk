@@ -5860,7 +5860,7 @@ float Player::CalculateReputationGain(ReputationSource source, uint32 creatureOr
 }
 
 // Calculates how many reputation points player gains in victim's enemy factions
-void Player::RewardReputation(Unit* victim, float rate)
+void Player::RewardReputation(Unit* victim)
 {
     if (!victim || victim->GetTypeId() == TYPEID_PLAYER)
         return;
@@ -5889,7 +5889,6 @@ void Player::RewardReputation(Unit* victim, float rate)
     if (Rep->RepFaction1 && (!Rep->TeamDependent || teamId == TEAM_ALLIANCE))
     {
         float donerep1 = CalculateReputationGain(REPUTATION_SOURCE_KILL, victim->GetLevel(), static_cast<float>(Rep->RepValue1), ChampioningFaction ? ChampioningFaction : Rep->RepFaction1);
-        donerep1 *= rate;
 
         FactionEntry const* factionEntry1 = sFactionStore.LookupEntry(ChampioningFaction ? ChampioningFaction : Rep->RepFaction1);
         if (factionEntry1)
@@ -5901,7 +5900,6 @@ void Player::RewardReputation(Unit* victim, float rate)
     if (Rep->RepFaction2 && (!Rep->TeamDependent || teamId == TEAM_HORDE))
     {
         float donerep2 = CalculateReputationGain(REPUTATION_SOURCE_KILL, victim->GetLevel(), static_cast<float>(Rep->RepValue2), ChampioningFaction ? ChampioningFaction : Rep->RepFaction2);
-        donerep2 *= rate;
 
         FactionEntry const* factionEntry2 = sFactionStore.LookupEntry(ChampioningFaction ? ChampioningFaction : Rep->RepFaction2);
         if (factionEntry2)
@@ -9037,20 +9035,6 @@ void Player::RemovePet(Pet* pet, PetSaveMode mode, bool returnreagent)
     else
     {
         pet->CombatStop();
-
-        if (returnreagent)
-        {
-            switch (pet->GetEntry())
-            {
-                //warlock pets except imp are removed(?) when logging out
-                case 1860:
-                case 1863:
-                case 417:
-                case 17252:
-                    mode = PET_SAVE_NOT_IN_SLOT;
-                    break;
-            }
-        }
 
         // only if current pet in slot
         pet->SavePetToDB(mode);
