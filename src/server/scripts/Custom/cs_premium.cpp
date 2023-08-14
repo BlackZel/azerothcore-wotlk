@@ -20,6 +20,8 @@ public:
         {
             { "bank", HandlePremiumBankCommand, SEC_PLAYER, Console::No},
             { "mail", HandlePremiumMailCommand, SEC_PLAYER, Console::No},
+            { "dalaran", HandlePremiumTeleDalCommand, SEC_PLAYER, Console::No},
+            { "home", HandlePremiumTeleCommand, SEC_PLAYER, Console::No},
             { "buff", HandleVIPBuffCommand, SEC_PLAYER, Console::No},
          //   { "inst", HandleInstanceVIPUnbindCommand, SEC_PLAYER, Console::No},
         };
@@ -154,6 +156,72 @@ public:
 
         handler->PSendSysMessage("instances unbound: %d", counter);
 
+        return true;
+    }
+
+    static bool HandlePremiumTeleDalCommand(ChatHandler* handler, char const* /*args*/)
+    {
+        Player* player = handler->GetSession()->GetPlayer();
+
+        if (player->getLevel() < 75)
+        {
+            handler->SendSysMessage("Команда недоступна до 75-го уровня.");
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        if (player->GetSession()->IsPremium())
+        {
+            //Different Checks
+            if (player->IsInCombat() || player->IsInFlight() || player->GetMap()->IsDungeon() || player->GetMap()->IsBattlegroundOrArena() || player->HasStealthAura() || player->HasFlag(UNIT_FIELD_FLAGS_2, UNIT_FLAG2_FEIGN_DEATH) || player->isDead())
+            {
+                handler->SendSysMessage(EMOTE_ZONE_VIP);
+                handler->SetSentErrorMessage(true);
+                return false;
+            }
+            player->TeleportTo(571, 5798.3003f, 630.79352f, 648.6858f, 1.972224f);
+        }
+        else
+            handler->SendSysMessage(EMOTE_NO_VIP);
+            handler->SetSentErrorMessage(true);
+        return true;
+    }
+
+    static bool HandlePremiumTeleCommand(ChatHandler* handler, char const* /*args*/)
+    {
+        Player* player = handler->GetSession()->GetPlayer();
+
+        if (player->getLevel() < 10)
+        {
+            handler->SendSysMessage("Команда недоступна до 10-го уровня.");
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        if (player->GetSession()->IsPremium())
+        {
+            //Different Checks
+            if (player->IsInCombat() || player->IsInFlight() || player->GetMap()->IsDungeon() || player->GetMap()->IsBattlegroundOrArena() || player->HasStealthAura() || player->HasFlag(UNIT_FIELD_FLAGS_2, UNIT_FLAG2_FEIGN_DEATH) || player->isDead())
+            {
+                handler->SendSysMessage(EMOTE_ZONE_VIP);
+                handler->SetSentErrorMessage(true);
+                return false;
+            }
+            else
+            {
+                if (player->GetTeamId() == TEAM_ALLIANCE)
+                {
+                    player->TeleportTo(0, -8839.285156f, 638.663513f, 95.518585f, 5.652075f);
+                }
+                else
+                {
+                    player->TeleportTo(1, 1554.050781f, -4426.899902f, 9.947619f, 0.802641f);
+                }
+            }
+        }
+        else
+            handler->SendSysMessage(EMOTE_NO_VIP);
+            handler->SetSentErrorMessage(true);
         return true;
     }
 
