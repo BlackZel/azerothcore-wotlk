@@ -10,10 +10,11 @@ public:
 		{          				
             player->learnSpell(55068); // trans
             player->learnSpell(61357); // vip
+            player->learnSpell(43688); // мишка
             player->EquipNewItem(INVENTORY_SLOT_BAG_1, 1623, true); // Сумка 1
             player->EquipNewItem(INVENTORY_SLOT_BAG_2, 1623, true); // Сумка 2
-            player->EquipNewItem(INVENTORY_SLOT_BAG_3, 1623, true); // Сумка 2
-            player->EquipNewItem(INVENTORY_SLOT_BAG_4, 1623, true); // Сумка 2
+        //   player->EquipNewItem(INVENTORY_SLOT_BAG_3, 1623, true); // Сумка 3
+        //    player->EquipNewItem(INVENTORY_SLOT_BAG_4, 1623, true); // Сумка 4
 		}
 
         // видача свитка vip
