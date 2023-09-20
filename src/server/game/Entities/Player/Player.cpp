@@ -8056,6 +8056,12 @@ void Player::SendLoot(ObjectGuid guid, LootType loot_type)
     // need know merged fishing/corpse loot type for achievements
     loot->loot_type = loot_type;
 
+    if (!sScriptMgr->OnAllowedToLootContainerCheck(this, guid))
+    {
+        SendLootError(guid, LOOT_ERROR_DIDNT_KILL);
+        return;
+    }
+
     if (permission != NONE_PERMISSION)
     {
         SetLootGUID(guid);
@@ -13281,6 +13287,8 @@ void Player::SetTitle(CharTitlesEntry const* title, bool lost)
     data << uint32(title->bit_index);
     data << uint32(lost ? 0 : 1);                           // 1 - earned, 0 - lost
     GetSession()->SendPacket(&data);
+
+    UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_OWN_RANK);
 }
 
 uint32 Player::GetRuneBaseCooldown(uint8 index, bool skipGrace)
