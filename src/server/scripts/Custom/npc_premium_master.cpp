@@ -100,7 +100,7 @@ public:
 		}
 
 		player->PlayerTalkClass->ClearMenus();
-    //    AddGossipItemFor(player,GOSSIP_ICON_DOT, "|TInterface/ICONS/Inv_misc_note_02:20|t Получить Звание [VIP]", GOSSIP_SENDER_MAIN, 9500);
+        AddGossipItemFor(player,GOSSIP_ICON_DOT, "|TInterface/ICONS/Inv_misc_note_02:20|t Получить Звание [VIP]", GOSSIP_SENDER_MAIN, 9500);
 		AddGossipItemFor(player,GOSSIP_ICON_DOT, "|TInterface/ICONS/spell_shadow_deathscream:20|t Снять [Слабость после воскрешения]", GOSSIP_SENDER_MAIN, 1209);
 		AddGossipItemFor(player,GOSSIP_ICON_DOT, "|TInterface/ICONS/ability_druid_cower:20|t Снять [Дезертир]", GOSSIP_SENDER_MAIN, 1210);
 		AddGossipItemFor(player,GOSSIP_ICON_DOT, "|TInterface/ICONS/Spell_holy_healingaura:20|t Вылечить персонажа", GOSSIP_SENDER_MAIN, 1202);

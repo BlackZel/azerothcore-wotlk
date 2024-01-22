@@ -96,6 +96,12 @@ public:
         uint16 counter = 0;
         uint16 mapId = 0;
 
+        if (!player->GetSession()->IsPremium())
+        {
+            handler->SendSysMessage("Команда доступна только для VIP-Аккаунтов!");
+            return false;
+        }
+
         if (mapArg.holds_alternative<uint16>())
         {
             mapId = mapArg.get<uint16>();

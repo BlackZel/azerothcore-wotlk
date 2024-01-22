@@ -51,6 +51,7 @@ public:
             handler.PSendSysMessage("|cff8ab6fc[.vip dal]|cfffcc141  - ТП в Даларан|r");
             handler.PSendSysMessage("|cff8ab6fcРейты:|cfffcc141 Опыт х12, Репутация х3, Очки чести и арены х2|r");
 			handler.PSendSysMessage("|cfffcc141Приятной игры.|r|TInterface/ICONS/Achievement_bg_tophealer_wsg:15|t");
+            player->CastSpell(player, 90000, true);
 			QueryResult result = LoginDatabase.Query("SELECT unsetdate FROM account_premium WHERE id = {}", accid);
 			if (result)
 			{
@@ -64,10 +65,13 @@ public:
 		}
 		else
 		{
-
 			ChatHandler handler(player->GetSession());            
 			handler.PSendSysMessage("|cff8ab6fc[VIP] |cfffcc141Премиум аккаунт не активен.|r");
-		}
+            player->removeSpell(90000, SPEC_MASK_ALL, false);
+            player->RemoveAurasDueToSpell(90000);
+            CharTitlesEntry const* titleInfo = sCharTitlesStore.LookupEntry(178);
+            player->SetTitle(titleInfo, true);
+        }
 	}
 };
 
