@@ -18,13 +18,13 @@
                     if (player->GetTeamId() == TEAM_ALLIANCE)
                     {
                         std::ostringstream ss;
-                        ss << "|CFFFE8A0EПриветствуем нового игрока|r: |CFFE55BB0" << player->GetName() << "|r|CFFFE8A0E Фракция|r:" "|CFF0042FF Альянс |r";
+                        ss << "|CFFFE8A0EВошел в игровой мир|r: |CFFE55BB0" << player->GetName() << "|r|CFFFE8A0E Фракция|r:" "|CFF0042FF Альянс |r";
                         sWorld->SendServerMessage(SERVER_MSG_STRING, ss.str().c_str());
                     }
                     else
                     {
                         std::ostringstream ss;
-                        ss << "|CFFFE8A0EПриветствуем нового игрока|r: |CFFE55BB0" << player->GetName() << "|r|CFFFE8A0E Фракция|r:" "|CFFFF0303 Орда |r";
+                        ss << "|CFFFE8A0EВошел в игровой мир|r: |CFFE55BB0" << player->GetName() << "|r|CFFFE8A0E Фракция|r:" "|CFFFF0303 Орда |r";
                         sWorld->SendServerMessage(SERVER_MSG_STRING, ss.str().c_str());
                     }
                 }

@@ -100,6 +100,7 @@ public:
 		}
 
 		player->PlayerTalkClass->ClearMenus();
+        AddGossipItemFor(player, GOSSIP_ICON_DOT, "|TInterface/ICONS/ability_rogue_feigndeath:25|t Сброс КД подземелий ->", GOSSIP_SENDER_MAIN, 1214);
         AddGossipItemFor(player,GOSSIP_ICON_DOT, "|TInterface/ICONS/Inv_misc_note_02:20|t Получить Звание [VIP]", GOSSIP_SENDER_MAIN, 9500);
 		AddGossipItemFor(player,GOSSIP_ICON_DOT, "|TInterface/ICONS/spell_shadow_deathscream:20|t Снять [Слабость после воскрешения]", GOSSIP_SENDER_MAIN, 1209);
 		AddGossipItemFor(player,GOSSIP_ICON_DOT, "|TInterface/ICONS/ability_druid_cower:20|t Снять [Дезертир]", GOSSIP_SENDER_MAIN, 1210);
@@ -139,6 +140,59 @@ public:
 
 		switch (action)
 		{
+        case 1214:
+        {
+            ClearGossipMenuFor(player);
+            uint32 diff = 2;
+            if (action == 1214)
+            {
+                for (uint8 i = 0; i < diff; ++i)
+                {
+                    BoundInstancesMap const& m_boundInstances = sInstanceSaveMgr->PlayerGetBoundInstances(player->GetGUID(), Difficulty(i));
+                    for (BoundInstancesMap::const_iterator itr = m_boundInstances.begin(); itr != m_boundInstances.end();)
+                    {
+                        if (itr->first != player->GetMapId())
+                        {
+                            sInstanceSaveMgr->PlayerUnbindInstance(player->GetGUID(), itr->first, Difficulty(i), true, player);
+                            itr = m_boundInstances.begin();
+                        }
+                        else
+                            ++itr;
+                    }
+                }
+                std::string creatureWhisper = "";
+                switch (player->GetSession()->GetSessionDbLocaleIndex())
+                {
+                case LOCALE_enUS:
+                case LOCALE_koKR:
+                case LOCALE_frFR:
+                case LOCALE_deDE:
+                case LOCALE_zhCN:
+                case LOCALE_zhTW:
+                {
+                    creatureWhisper = "Your instances have been reset.";
+                    break;
+                }
+                case LOCALE_esES:
+                case LOCALE_esMX:
+                {
+                    creatureWhisper = "Sus instancias han sido restablecidas.";
+                    break;
+                }
+                case LOCALE_ruRU:
+                {
+                    creatureWhisper = "Ваши подземелья [5/10/25 об] перезагружены.";
+                    break;
+                }
+                default:
+                    break;
+                }
+                creature->Whisper(creatureWhisper, LANG_UNIVERSAL, player);
+                CloseGossipMenuFor(player);
+            }
+            return true;
+        }
+            break;
 		case 4:
 			OnGossipHello(player, creature);
 			break;

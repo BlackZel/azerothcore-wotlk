@@ -96,7 +96,7 @@ public:
         uint16 counter = 0;
         uint16 mapId = 0;
 
-        if (!player->GetSession()->IsPremium())
+        if (!player->GetSession()->IsPremium() && player->GetSession()->GetSecurity() <= SEC_MODERATOR)
         {
             handler->SendSysMessage("Команда доступна только для VIP-Аккаунтов!");
             return false;

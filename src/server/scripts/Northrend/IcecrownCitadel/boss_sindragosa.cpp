@@ -649,7 +649,7 @@ public:
                     {
                         Talk(EMOTE_WARN_FROZEN_ORB, target);
                         me->CastSpell(target, SPELL_ICE_TOMB_DUMMY, true);
-                        me->CastSpell(target, SPELL_FROST_BEACON, true);
+                     //   me->CastSpell(target, SPELL_FROST_BEACON, true);
                         if (uint32 evTime = events.GetNextEventTime(EVENT_ICY_GRIP))
                             if (events.GetTimer() > evTime || evTime - events.GetTimer() < 8000)
                                 events.RescheduleEvent(EVENT_ICY_GRIP, 8s, EVENT_GROUP_LAND_PHASE);
